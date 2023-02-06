@@ -3,6 +3,22 @@ import requests
 import time
 
 class Gardenapi:
+    """
+    Class that represets the Rise Garden API.
+    
+    Attributes
+    ----------
+    url: Base URL of the Rise Garden API
+    token: Login token for the Rise Garden API
+    credetials: The email and password used to login
+    user_info: User information returned from the Rise Garden API
+    
+    Methods
+    -------
+    login(email, password): Log into the Rise Garden API
+    get_gardens(): Get a list of the Rise Gardens for the account
+    """
+
     # Initialize the class
     def __init__(self):
         self.url = 'https://prod-api.risegds.com/v2'
@@ -53,6 +69,13 @@ class Gardenapi:
 
     # Public Methods
     def login(self, email: str, password: str) -> bool:
+        """
+        Log into the Rise Garden API with the supplied email and password.
+        
+        :param email: Login email
+        :param password: Login password
+        :return: bool. True if login successful; false if unsuccessful.
+        """
         self.credentials['email'] = email
         self.credentials['password'] = password
 
@@ -71,5 +94,10 @@ class Gardenapi:
         return True
 
     def get_gardens(self) -> dict:
+        """
+        Get a list of gardens managed / owned by the account
+        
+        :return: list of gardens managed by the account
+        """
         return self._request('GET', '/gardens')
 
