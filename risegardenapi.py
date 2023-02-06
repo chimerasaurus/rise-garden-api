@@ -77,15 +77,18 @@ class RiseGardenAPI:
             data=json.dumps(body),
             timeout=self.timeout
         )
-        return(response.json())
+        return((response.json(), response.status_code))
     
-    def _refresh(self) -> None:
+    def _refresh(self) -> bool:
         """
         PRIVATE: Refresh the token.
+        :return: bool. True if token refreshed; false if token not refreshed.
         """
         # TODO Missing token
-        self._request('POST', '/auth/refresh_token')
-        return None
+        response = self._request('POST', '/auth/refresh_token')
+        if (response[1] != 200):
+            return False
+        return True
     
     def _refresh_token(self) -> None:
         """
@@ -128,7 +131,7 @@ class RiseGardenAPI:
         :return: dict of garden details
         """
         garden_details = self._request('GET', f'/gardens/{garden_id}/device/status')
-        return garden_details
+        return garden_details[0]
 
     def get_gardens(self) -> list:
         """
@@ -136,27 +139,30 @@ class RiseGardenAPI:
         
         :return: list of gardens managed by the account
         """
-        gardens = self._request('GET', '/gardens')
+        response = self._request('GET', '/gardens')
         # Add the garden to the list
-        for rise_garden in gardens:
+        for rise_garden in response[0]:
             new_garden = Garden(rise_garden['id'], rise_garden['name'], rise_garden['garden_type'], self)
             self.gardens.append(new_garden)
-        return gardens
+        return response[0]
 
-    def set_lamp_level(self, id: int, level: int):
+    def set_lamp_level(self, id: int, level: int) -> bool:
         """
         Set the lamp level for the garden.
         :param id: ID of the garden
         :param level: Level to set the lamp to (0-100)
+        :return: bool. True if successful; false if unsuccessful.
         """
         request_body = {
             "light_level": str(level),
             "wait_for_response": "true"
         }
-        self._request('PUT', f'/gardens/{id}/device/light-level', request_body)
+        response = self._request('PUT', f'/gardens/{id}/device/light-level', request_body)
+        if response[1] != 200:
+            return False
         # Update the status of the garden now that the state has changed
         self.update_garden(id)
-        return None
+        return True
     
     def update_garden(self, id: int) -> bool:
         """
