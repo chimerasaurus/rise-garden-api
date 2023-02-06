@@ -87,12 +87,20 @@ class Gardenapi:
         print(response.json())
         self.token['access_token'] = response.json()['token']
         self.token['refresh_token'] = response.json()['refresh_token']
-        self.token['user_id'] = response.json()['user']['id'] # TODO: Remove this in the future
         self.token['expires_in'] = response.json()['expires_in']
         self.token['expires_at'] = response.json()['expires_in'] + int(time.time())
         self.user_info = response.json()['user']
 
         return True
+
+    def get_garden_status(self, garden_id: int) -> dict:
+        """
+        Get the status of a garden (eg: lights, temperature, etc.)
+        
+        :param garden_id: Garden to get information for (ID is from get_tardens)
+        :return: dict of garden details
+        """
+        return self._request('GET', f'/gardens/{garden_id}/device/status')
 
     def get_gardens(self) -> dict:
         """
