@@ -10,7 +10,17 @@ The Rise Garden is an indoor hydroponic garden. This Python module works with th
 Specifically, this Python module has the folling functionality when working with the Rise API:
 
 * Get Rise Gardens
-* _More to come_
+* Get information for each garden
+    * ID
+    * Name
+    * Last reading datestamp
+    * Type
+    * Mainboard and software information
+    * Network / wifi details
+    * Tank status
+        * Water level
+        * Water LED status
+    * Ambient temperature
 
 ## Notes
 *This is an unofficial project and not associated with Rise Gardens*. This project is also inspired by and based on [homebridge-rise-garden](https://github.com/viamin/homebridge-rise-garden) by Bart Agapinan. I wanted a Python module so I could build a Home Assistant integration. 

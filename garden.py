@@ -10,6 +10,17 @@ class Garden:
     
     Attributes
     ----------
+    id: The ID of the garden
+    name: The name of the garden
+    type: The type of the garden
+    api: The API object used to communicate with the garden
+    status: The status of the garden
+    last_reading: The last reading from the garden
+    kit: The kit type of the garden
+    Mainboard: The mainboard information for the garden
+    wifi: The wifi information for the garden
+    tank: The tank information for the garden
+    temperature: The temperature of the garden
     
     Methods
     -------
