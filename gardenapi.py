@@ -141,7 +141,33 @@ class Gardenapi:
             new_garden = Garden(rise_garden['id'], rise_garden['name'], rise_garden['garden_type'], self)
             self.gardens.append(new_garden)
         return gardens
+
+    def set_lamp_level(self, id: int, level: int):
+        """
+        Set the lamp level for the garden.
+        :param id: ID of the garden
+        :param level: Level to set the lamp to (0-100)
+        """
+        request_body = {
+            'light_level': str(level),
+            'wait_for_response': 'true'
+        }
+        self._request('PUT', f'/gardens/{id}/device/light-level', request_body)
+        # Update the status of the garden now that the state has changed
+        self.update_garden(id)
+        return None
     
+    def update_garden(self, id: int) -> bool:
+        """
+        Update the status for a specific garden.
+        :param id: ID of the garden to update
+        :return: bool. True if successful; false if unsuccessful.
+        """
+        for rise_garden in self.gardens:
+            if rise_garden.id == id:
+                rise_garden.update()
+        return True
+
     def update_gardens(self) -> bool:
         """
         Update the status for each garden in the list of gardens.

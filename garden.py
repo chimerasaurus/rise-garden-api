@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from gardenapi import Gardenapi
+from pprint import pprint
 
 class Garden:
     """
@@ -39,6 +40,7 @@ class Garden:
         self.wifi = None
         self.tank = None
         self.temperature = None
+        self.lamp = None
     
     def _update_status(self, status: dict) -> None:
         """
@@ -52,6 +54,7 @@ class Garden:
         self.wifi = Garden.Wifi(status['ip'], status['wifi_signal_strength'], status['wifi_rssi'])
         self.tank = Garden.Tank(status['water_distance'], status['water_depth'], status['water_led_index'],
             status['current_water_volume_gallons'])
+        self.lamp = Garden.Lamp(status['lamp_state'], status['lamp_level'], self)
         self.temperature = status['at']
 
     def __str__(self) -> str:
@@ -59,7 +62,7 @@ class Garden:
         Return a string representation of the garden.
         :return: str. The name and type of the garden.
         """
-        return f'{self.name} ({self.type}) - {self.status}'
+        return pprint(self.__dict__)
 
     def temp_in_c(self) -> float:
         """
@@ -99,6 +102,12 @@ class Garden:
             self.ip = ip
             self.strength = strength
             self.rssi = rssi
+        
+        def __str__(self) -> str:
+            """
+            Return a string representation of the wifi.
+            """
+            return pprint(self.__dict__)
     
     class Mainboard:
         """
@@ -115,6 +124,12 @@ class Garden:
             self.serial_number = serial_number
             self.firmware = firmware
             self.control_board_id = control_board_id
+        
+        def __str__(self) -> str:
+            """
+            Return a string representation of the mainboard.
+            """
+            return pprint(self.__dict__)
 
     class Tank:
         """
@@ -138,6 +153,12 @@ class Garden:
             self.led_index = led_index
             self.volume = volume
         
+        def __str__(self) -> str:
+            """
+            Return a string representation of the tank.
+            """
+            return pprint(self.__dict__)
+        
         def volume_gallons(self) -> float:
             """
             Return the water level of the tank in gallons.
@@ -151,3 +172,25 @@ class Garden:
             :return: float. The water level of the tank in liters.
             """
             return self.volume * 3.78541
+
+    class Lamp:
+        """
+        Class that represents the lamp settings for a Rise Garden.
+        """
+        def __init__(self, on: bool, level: int, garden: Garden):
+            self.on = on
+            self.level = level
+            self.garden = garden
+
+        def __str__(self) -> str:
+            """
+            Return a string representation of the lamp.
+            """
+            return pprint(self.__dict__)
+        
+        def set_level(self, level: int):
+            """
+            Set the lamp level.
+            :param level: int. The level to set the lamp to.
+            """
+            self.garden.api.set_lamp_level(self.garden.id, level)
