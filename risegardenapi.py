@@ -1,9 +1,10 @@
 # Imports
 from garden import Garden
+import json
 import requests
 import time
 
-class Gardenapi:
+class RiseGardenAPI:
     """
     Class that represets the Rise Garden API.
     
@@ -46,7 +47,7 @@ class Gardenapi:
 
         :return: bool. True if token is expired; false if token is valid. 
         """
-        return self.token['expires_at'] - 60000 > int(time.time())
+        return self.token['expires_at'] - 60000 < int(time.time())
 
     def _is_token_valid(self) -> bool:
         """
@@ -73,7 +74,7 @@ class Gardenapi:
             method,
             headers=headers,
             url=self.url + endpoint,
-            data=body,
+            data=json.dumps(body),
             timeout=self.timeout
         )
         return(response.json())
@@ -82,6 +83,7 @@ class Gardenapi:
         """
         PRIVATE: Refresh the token.
         """
+        # TODO Missing token
         self._request('POST', '/auth/refresh_token')
         return None
     
@@ -110,7 +112,6 @@ class Gardenapi:
         if response.status_code != 200:
             return False
 
-        print(response.json())
         self.token['access_token'] = response.json()['token']
         self.token['refresh_token'] = response.json()['refresh_token']
         self.token['expires_in'] = response.json()['expires_in']
@@ -149,8 +150,8 @@ class Gardenapi:
         :param level: Level to set the lamp to (0-100)
         """
         request_body = {
-            'light_level': str(level),
-            'wait_for_response': 'true'
+            "light_level": str(level),
+            "wait_for_response": "true"
         }
         self._request('PUT', f'/gardens/{id}/device/light-level', request_body)
         # Update the status of the garden now that the state has changed
@@ -173,6 +174,11 @@ class Gardenapi:
         Update the status for each garden in the list of gardens.
         :return: bool. True if successful; false if unsuccessful.
         """
+        # Get gardens if there are none
+        if len(self.gardens) == 0:
+            self.get_gardens()
+
+        # Update each garden
         for rise_garden in self.gardens:
             rise_garden.update()
         return True

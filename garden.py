@@ -2,8 +2,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from gardenapi import Gardenapi
-from pprint import pprint
+    from risegardenapi import RiseGardenAPI
+from pprint import pformat
 
 class Garden:
     """
@@ -28,7 +28,7 @@ class Garden:
     """
 
     # Initialize the class
-    def __init__(self, id: int, name: str, type: str, api: Gardenapi):
+    def __init__(self, id: int, name: str, type: str, api: RiseGardenAPI):
         self.id = id
         self.name = name
         self.type = type
@@ -50,7 +50,7 @@ class Garden:
         self.status = status['status']
         self.last_reading = status['last_reading']
         self.kit = status['kit']
-        self.Mainboard = Garden.Mainboard(status['serial_number'], status['firmware'], status['control_board_id'])
+        self.mainboard = Garden.Mainboard(status['serial_number'], status['firmware'], status['control_board_id'])
         self.wifi = Garden.Wifi(status['ip'], status['wifi_signal_strength'], status['wifi_rssi'])
         self.tank = Garden.Tank(status['water_distance'], status['water_depth'], status['water_led_index'],
             status['current_water_volume_gallons'])
@@ -62,7 +62,7 @@ class Garden:
         Return a string representation of the garden.
         :return: str. The name and type of the garden.
         """
-        return pprint(self.__dict__)
+        return pformat(self.__dict__)
 
     def temp_in_c(self) -> float:
         """
@@ -107,7 +107,7 @@ class Garden:
             """
             Return a string representation of the wifi.
             """
-            return pprint(self.__dict__)
+            return pformat(self.__dict__)
     
     class Mainboard:
         """
@@ -129,7 +129,7 @@ class Garden:
             """
             Return a string representation of the mainboard.
             """
-            return pprint(self.__dict__)
+            return pformat(self.__dict__)
 
     class Tank:
         """
@@ -157,7 +157,7 @@ class Garden:
             """
             Return a string representation of the tank.
             """
-            return pprint(self.__dict__)
+            return pformat(self.__dict__)
         
         def volume_gallons(self) -> float:
             """
@@ -186,7 +186,7 @@ class Garden:
             """
             Return a string representation of the lamp.
             """
-            return pprint(self.__dict__)
+            return pformat(self.__dict__)
         
         def set_level(self, level: int):
             """
