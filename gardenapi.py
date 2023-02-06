@@ -147,6 +147,6 @@ class Gardenapi:
         Update the status for each garden in the list of gardens.
         :return: bool. True if successful; false if unsuccessful.
         """
-        for rise_garden in gardens:
+        for rise_garden in self.gardens:
             rise_garden.update()
         return True

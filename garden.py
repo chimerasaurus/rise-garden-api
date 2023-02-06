@@ -27,6 +27,7 @@ class Garden:
         self.Mainboard = None
         self.wifi = None
         self.tank = None
+        self.temperature = None
     
     def _update_status(self, status: dict) -> None:
         """
@@ -40,6 +41,7 @@ class Garden:
         self.wifi = Garden.Wifi(status['ip'], status['wifi_signal_strength'], status['wifi_rssi'])
         self.tank = Garden.Tank(status['water_distance'], status['water_depth'], status['water_led_index'],
             status['current_water_volume_gallons'])
+        self.temperature = status['at']
 
     def __str__(self) -> str:
         """
@@ -47,6 +49,20 @@ class Garden:
         :return: str. The name and type of the garden.
         """
         return f'{self.name} ({self.type}) - {self.status}'
+
+    def temp_in_c(self) -> float:
+        """
+        Return the temperature in Celsius.
+        :return: float. The temperature in Celsius.
+        """
+        return self.temperature
+
+    def temp_in_f(self) -> float:
+        """
+        Return the temperature in Fahrenheit.
+        :return: float. The temperature in Fahrenheit.
+        """
+        return self.temperature * 1.8 + 32
 
     def update(self) -> bool:
         """
@@ -60,6 +76,12 @@ class Garden:
     class Wifi:
         """
         Class that represents the wifi settings for a Rise Garden.
+
+        Attributes
+        ----------
+        ip : str - The IP address of the garden
+        strength : str - The strength of the wifi signal
+        rssi : int - The RSSI of the wifi signal
         """
 
         def __init__(self, ip: str, strength: str, rssi: int):
@@ -70,6 +92,12 @@ class Garden:
     class Mainboard:
         """
         Class that represents the mainboard settings for a Rise Garden.
+
+        Attributes
+        ----------
+        serial_number : str - The serial number of the mainboard
+        firmware : str - The firmware version of the mainboard
+        control_board_id : str - The control board ID of the mainboard
         """
 
         def __init__(self, serial_number: str, firmware: str, control_board_id: str):
@@ -80,6 +108,18 @@ class Garden:
     class Tank:
         """
         Class that represents the water tank for a Rise Garden.
+
+        Attributes
+        ----------
+        distance : int - The distance from the tank to the sensor
+        depth : float - The depth of the water in the tank
+        led_index : int - The LED index of the tank
+        volume : float - The volume of water in the tank
+
+        Methods
+        -------
+        volume_gallons() -> float - Return the water level of the tank in gallons
+        volume_liters() -> float - Return the water level of the tank in liters
         """
         def __init__(self, distance: int, depth: float, led_index: int, volume: float):
             self.distance = distance
