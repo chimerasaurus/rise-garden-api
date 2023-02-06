@@ -87,9 +87,10 @@ class Gardenapi:
         print(response.json())
         self.token['access_token'] = response.json()['token']
         self.token['refresh_token'] = response.json()['refresh_token']
-        self.token['user_id'] = response.json()['user']['id']
+        self.token['user_id'] = response.json()['user']['id'] # TODO: Remove this in the future
         self.token['expires_in'] = response.json()['expires_in']
         self.token['expires_at'] = response.json()['expires_in'] + int(time.time())
+        self.user_info = response.json()['user']
 
         return True
 
