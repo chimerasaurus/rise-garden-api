@@ -1,14 +1,15 @@
 # Imports
 from __future__ import annotations
+from pprint import pformat
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from risegardenapi import RiseGardenAPI
-from pprint import pformat
+
 
 class Garden:
     """
     Class that represets a Rise Garden.
-    
+
     Attributes
     ----------
     id: The ID of the garden
@@ -22,7 +23,7 @@ class Garden:
     wifi: The wifi information for the garden
     tank: The tank information for the garden
     temperature: The temperature of the garden
-    
+
     Methods
     -------
     """
@@ -36,12 +37,12 @@ class Garden:
         self.status = None
         self.last_reading = None
         self.kit = None
-        self.Mainboard = None
+        self.mainboard = None
         self.wifi = None
         self.tank = None
         self.temperature = None
         self.lamp = None
-    
+
     def _update_status(self, status: dict) -> None:
         """
         PRIVATE: Update the garden status.
@@ -86,7 +87,7 @@ class Garden:
         status = self.api.get_garden_status(self.id)
         self._update_status(status)
         return True
-    
+
     class Wifi:
         """
         Class that represents the wifi settings for a Rise Garden.
@@ -102,13 +103,13 @@ class Garden:
             self.ip = ip
             self.strength = strength
             self.rssi = rssi
-        
+
         def __str__(self) -> str:
             """
             Return a string representation of the wifi.
             """
             return pformat(self.__dict__)
-    
+
     class Mainboard:
         """
         Class that represents the mainboard settings for a Rise Garden.
@@ -124,7 +125,7 @@ class Garden:
             self.serial_number = serial_number
             self.firmware = firmware
             self.control_board_id = control_board_id
-        
+
         def __str__(self) -> str:
             """
             Return a string representation of the mainboard.
@@ -152,20 +153,20 @@ class Garden:
             self.depth = depth
             self.led_index = led_index
             self.volume = volume
-        
+
         def __str__(self) -> str:
             """
             Return a string representation of the tank.
             """
             return pformat(self.__dict__)
-        
+
         def volume_gallons(self) -> float:
             """
             Return the water level of the tank in gallons.
             :return: float. The water level of the tank in gallons.
             """
             return self.volume
-        
+
         def volume_liters(self) -> float:
             """
             Return the water level of the tank in liters.
@@ -187,7 +188,7 @@ class Garden:
             Return a string representation of the lamp.
             """
             return pformat(self.__dict__)
-        
+
         def set_level(self, level: int):
             """
             Set the lamp level.

@@ -1,20 +1,20 @@
 # Imports
-from garden import Garden
 import json
-import requests
 import time
+import requests
+from garden import Garden
 
 class RiseGardenAPI:
     """
     Class that represets the Rise Garden API.
-    
+
     Attributes
     ----------
     url: Base URL of the Rise Garden API
     token: Login token for the Rise Garden API
     credetials: The email and password used to login
     user_info: User information returned from the Rise Garden API
-    
+
     Methods
     -------
     login(email, password): Log into the Rise Garden API
@@ -43,7 +43,7 @@ class RiseGardenAPI:
     # Private Methods
     def _is_token_expired(self) -> bool:
         """
-        PRIVATE: Check whether the token is expired. Ensures the toklen doesn't expire in the next 60 seconds.
+        PRIVATE: Check whether the token is expired; toklen doesn't expire in next 60 seconds.
 
         :return: bool. True if token is expired; false if token is valid. 
         """
@@ -60,7 +60,7 @@ class RiseGardenAPI:
     def _request(self, method: str, endpoint: str, body: dict = None) -> dict:
         """
         PRIVATE: Make a request to the Rise Garden API.
-        
+
         :param method: HTTP method to use (eg: GET, POST, etc.)
         :param endpoint: Endpoint to make the request to
         :param body: Body of the request
@@ -77,8 +77,8 @@ class RiseGardenAPI:
             data=json.dumps(body),
             timeout=self.timeout
         )
-        return((response.json(), response.status_code))
-    
+        return (response.json(), response.status_code)
+
     def _refresh(self) -> bool:
         """
         PRIVATE: Refresh the token.
@@ -86,24 +86,24 @@ class RiseGardenAPI:
         """
         # TODO Missing token
         response = self._request('POST', '/auth/refresh_token')
-        if (response[1] != 200):
+        if response[1] != 200:
             return False
         return True
-    
+
     def _refresh_token(self) -> None:
         """
         PRIVATE: Refresh the token if it is expired or invalid.
         """
         if (self.token['refresh_token'] is not None and self._is_token_expired()):
             self._refresh()
-        elif (self.token['refresh_token'] is None):
+        elif self.token['refresh_token'] is None:
             self.login(self.credentials['email'], self.credentials['password'])
 
     # Public Methods
     def login(self, email: str, password: str) -> bool:
         """
         Log into the Rise Garden API with the supplied email and password.
-        
+
         :param email: Login email
         :param password: Login password
         :return: bool. True if login successful; false if unsuccessful.
@@ -126,7 +126,7 @@ class RiseGardenAPI:
     def get_garden_status(self, garden_id: int) -> dict:
         """
         Get the status of a garden (eg: lights, temperature, etc.)
-        
+
         :param garden_id: Garden to get information for (ID is from get_tardens)
         :return: dict of garden details
         """
@@ -136,7 +136,7 @@ class RiseGardenAPI:
     def get_gardens(self) -> list:
         """
         Get a list of gardens managed / owned by the account
-        
+
         :return: list of gardens managed by the account
         """
         response = self._request('GET', '/gardens')
@@ -163,7 +163,7 @@ class RiseGardenAPI:
         # Update the status of the garden now that the state has changed
         self.update_garden(id)
         return True
-    
+
     def update_garden(self, id: int) -> bool:
         """
         Update the status for a specific garden.
