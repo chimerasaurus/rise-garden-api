@@ -12,9 +12,9 @@ class Garden:
 
     Attributes
     ----------
-    id: The ID of the garden
+    number: The ID/number of the garden
     name: The name of the garden
-    type: The type of the garden
+    model: The model of the garden
     api: The API object used to communicate with the garden
     status: The status of the garden
     last_reading: The last reading from the garden
@@ -29,10 +29,10 @@ class Garden:
     """
 
     # Initialize the class
-    def __init__(self, id: int, name: str, type: str, api: RiseGardenAPI):
-        self.id = id
+    def __init__(self, number: int, name: str, model: str, api: RiseGardenAPI):
+        self.number = number
         self.name = name
-        self.type = type
+        self.model = model
         self.api = api
         self.status = None
         self.last_reading = None
@@ -84,7 +84,7 @@ class Garden:
         Update the garden information.
         :return: bool. True if the update was successful; false if the update failed.
         """
-        status = self.api.get_garden_status(self.id)
+        status = self.api.get_garden_status(self.number)
         self._update_status(status)
         return True
 
@@ -178,8 +178,8 @@ class Garden:
         """
         Class that represents the lamp settings for a Rise Garden.
         """
-        def __init__(self, on: bool, level: int, garden: Garden):
-            self.on = on
+        def __init__(self, switched_on: bool, level: int, garden: Garden):
+            self.switched_on = switched_on
             self.level = level
             self.garden = garden
 
@@ -194,4 +194,4 @@ class Garden:
             Set the lamp level.
             :param level: int. The level to set the lamp to.
             """
-            self.garden.api.set_lamp_level(self.garden.id, level)
+            self.garden.api.set_lamp_level(self.garden.number, level)

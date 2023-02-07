@@ -146,10 +146,10 @@ class RiseGardenAPI:
             self.gardens.append(new_garden)
         return response[0]
 
-    def set_lamp_level(self, id: int, level: int) -> bool:
+    def set_lamp_level(self, number: int, level: int) -> bool:
         """
         Set the lamp level for the garden.
-        :param id: ID of the garden
+        :param id: number of the garden
         :param level: Level to set the lamp to (0-100)
         :return: bool. True if successful; false if unsuccessful.
         """
@@ -157,21 +157,21 @@ class RiseGardenAPI:
             "light_level": str(level),
             "wait_for_response": "true"
         }
-        response = self._request('PUT', f'/gardens/{id}/device/light-level', request_body)
+        response = self._request('PUT', f'/gardens/{number}/device/light-level', request_body)
         if response[1] != 200:
             return False
         # Update the status of the garden now that the state has changed
-        self.update_garden(id)
+        self.update_garden(number)
         return True
 
-    def update_garden(self, id: int) -> bool:
+    def update_garden(self, number: int) -> bool:
         """
         Update the status for a specific garden.
         :param id: ID of the garden to update
         :return: bool. True if successful; false if unsuccessful.
         """
         for rise_garden in self.gardens:
-            if rise_garden.id == id:
+            if rise_garden.number == number:
                 rise_garden.update()
         return True
 
