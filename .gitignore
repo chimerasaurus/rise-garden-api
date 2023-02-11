@@ -156,3 +156,6 @@ notes.txt
 
 # Exclude Mac OS artifacts
 .DS_STORE
+
+# Exclude virtual environment
+testbuild

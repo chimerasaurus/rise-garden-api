@@ -37,7 +37,7 @@ class RiseGardenAPI:
         }
         self.user_info = None
         self.timeout = 20
-        self.gardens = []
+        self.gardens = {}
 
 
     # Private Methods
@@ -123,15 +123,26 @@ class RiseGardenAPI:
 
         return True
 
+    def get_garden_details(self, garden_id: int) -> dict:
+        """
+        Get the details of a garden (eg: trans, plants, nurseries, etc.)
+
+        :param garden_id: Garden to get information for (ID is from get_gardens)
+        :return: dict of garden details
+        """
+        garden_details = self._request('GET', f'/gardens/{garden_id}')
+        #TODO Create trays, nurseries, etc.
+        return garden_details[0]
+
     def get_garden_status(self, garden_id: int) -> dict:
         """
         Get the status of a garden (eg: lights, temperature, etc.)
 
-        :param garden_id: Garden to get information for (ID is from get_tardens)
-        :return: dict of garden details
+        :param garden_id: Garden to get information for (ID is from get_gardens)
+        :return: dict of garden status
         """
-        garden_details = self._request('GET', f'/gardens/{garden_id}/device/status')
-        return garden_details[0]
+        garden_status = self._request('GET', f'/gardens/{garden_id}/device/status')
+        return garden_status[0]
 
     def get_gardens(self) -> list:
         """
@@ -143,7 +154,7 @@ class RiseGardenAPI:
         # Add the garden to the list
         for rise_garden in response[0]:
             new_garden = Garden(rise_garden['id'], rise_garden['name'], rise_garden['garden_type'], self)
-            self.gardens.append(new_garden)
+            self.gardens[rise_garden['id']] = new_garden
         return response[0]
 
     def set_lamp_level(self, number: int, level: int) -> bool:
@@ -170,10 +181,11 @@ class RiseGardenAPI:
         :param id: ID of the garden to update
         :return: bool. True if successful; false if unsuccessful.
         """
-        for rise_garden in self.gardens:
-            if rise_garden.number == number:
-                rise_garden.update()
-        return True
+        if number not in self.gardens:
+            rise_garden.update()
+            return True
+
+        return False
 
     def update_gardens(self) -> bool:
         """
@@ -186,5 +198,5 @@ class RiseGardenAPI:
 
         # Update each garden
         for rise_garden in self.gardens:
-            rise_garden.update()
+            self.gardens[rise_garden].update()
         return True
