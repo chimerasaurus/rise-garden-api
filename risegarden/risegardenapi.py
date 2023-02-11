@@ -2,7 +2,7 @@
 import json
 import time
 import requests
-from garden import Garden
+from risegarden.garden import Garden
 
 class RiseGardenAPI:
     """
@@ -45,7 +45,7 @@ class RiseGardenAPI:
         """
         PRIVATE: Check whether the token is expired; toklen doesn't expire in next 60 seconds.
 
-        :return: bool. True if token is expired; false if token is valid. 
+        :return: bool. True if token is expired; false if token is valid.
         """
         return self.token['expires_at'] - 60000 < int(time.time())
 

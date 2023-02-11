@@ -3,7 +3,7 @@ from __future__ import annotations
 from pprint import pformat
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from risegardenapi import RiseGardenAPI
+    from risegarden.risegardenapi import RiseGardenAPI
 
 
 class Garden:
