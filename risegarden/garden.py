@@ -195,3 +195,12 @@ class Garden:
             :param level: int. The level to set the lamp to.
             """
             self.garden.api.set_lamp_level(self.garden.number, level)
+
+        def toggle(self):
+            """
+            Toggle the lamp on or off depending on its current state.
+            """
+            if self.switched_on:
+                self.garden.api.set_lamp_level(self.garden.number, 0)
+            else:
+                self.garden.api.set_lamp_level(self.garden.number, 100)
